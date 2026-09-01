@@ -101,6 +101,31 @@
         utilization, unified memory usage, and exactly who is running what. You'll actually see a short version
         of this automatically every time you SSH in. Use <code>sparktop -w</code> to watch it live (refreshes
         every 2 seconds, Ctrl-C to quit).
+
+        <p>Two real examples so you know what you're looking at:</p>
+
+        <p><strong>Someone is actually training a model</strong> &mdash; GPU-MEM and SM% are non-zero, and there's
+        a real process attached:</p>
+        <pre><code>GPU0 NVIDIA GB10   |||||||||||||||||||.  96.0%  sm 2509/3003MHz  pwr 82W  temp 49C  no throttling
+MEM |................... 5.5G/121.7G used   free 116.2G   gpu-held 1.3G
+
+USER            PID   GPU-MEM   SM%   CPU%     RSS     TIME T COMMAND
+alice         84183      1.3G    84     99  126.3M     0:03 C python3 train.py</code></pre>
+        <p>Here, <code>alice</code> is holding 1.3G of GPU memory and using 84% of the GPU's compute. Don't start
+        a heavy job of your own right now &mdash; wait or ask her when she'll be done.</p>
+
+        <p><strong>The GPU% number lies sometimes</strong> &mdash; this is a real known quirk on this hardware,
+        and <code>sparktop</code> is built to catch it:</p>
+        <pre><code>GPU0 NVIDIA GB10   ....................  96.0% (stale?)  sm 2528/3003MHz  pwr 17W  temp 40C
+     (stale?) = high util% but idle-level power and no process — a known nvidia-smi quirk on GB10,
+     not real load. Trust power/process instead.
+
+USER            PID   GPU-MEM   SM%   CPU%     RSS     TIME T COMMAND
+  (no process is holding a CUDA context)</code></pre>
+        <p>Here the raw percentage says "96%", but the power draw is only 17W (idle-level, real jobs pull 60-100+W)
+        and no process is listed &mdash; <code>sparktop</code> flags this as a stale reading rather than pretending
+        the GPU is busy. This can happen after a job finishes; it clears on its own eventually. If you ever see this,
+        the GPU is actually free to use &mdash; trust the process table and power draw, not the raw percentage.</p>
       </li>
       <li>
         <strong>Check your architecture</strong> (this machine is ARM64, not the usual x86_64 &mdash; matters for
@@ -136,10 +161,6 @@ bash Miniconda3-latest-Linux-aarch64.sh</code></pre>
 conda activate myenv</code></pre>
     <p>Install whatever packages your project needs (e.g. <code>pip install torch</code>) inside this environment.
     Since the GPU is shared, only install/run what you actually need &mdash; see the next section.</p>
-
-    <h3>Docker</h3>
-    <p>Docker is installed on the machine, but student accounts are not in the <code>docker</code> group by
-    default. If your project specifically needs containers, email <a href="#help">Junyi Ye</a> to discuss it.</p>
   </section>
 
   <section id="sharing">
