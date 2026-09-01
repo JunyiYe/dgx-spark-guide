@@ -102,10 +102,8 @@
         of this automatically every time you SSH in. Use <code>sparktop -w</code> to watch it live (refreshes
         every 2 seconds, Ctrl-C to quit).
 
-        <p>Two real examples so you know what you're looking at:</p>
-
-        <p><strong>Someone is actually training a model</strong> &mdash; GPU-MEM and SM% are non-zero, and there's
-        a real process attached:</p>
+        <p>Here's what it looks like when someone is actually training a model &mdash; GPU-MEM and SM% are
+        non-zero, and there's a real process attached:</p>
         <pre><code>GPU0 NVIDIA GB10   |||||||||||||||||||.  96.0%  sm 2509/3003MHz  pwr 82W  temp 49C  no throttling
 MEM |................... 5.5G/121.7G used   free 116.2G   gpu-held 1.3G
 
@@ -113,19 +111,6 @@ USER            PID   GPU-MEM   SM%   CPU%     RSS     TIME T COMMAND
 alice         84183      1.3G    84     99  126.3M     0:03 C python3 train.py</code></pre>
         <p>Here, <code>alice</code> is holding 1.3G of GPU memory and using 84% of the GPU's compute. Don't start
         a heavy job of your own right now &mdash; wait or ask her when she'll be done.</p>
-
-        <p><strong>The GPU% number lies sometimes</strong> &mdash; this is a real known quirk on this hardware,
-        and <code>sparktop</code> is built to catch it:</p>
-        <pre><code>GPU0 NVIDIA GB10   ....................  96.0% (stale?)  sm 2528/3003MHz  pwr 17W  temp 40C
-     (stale?) = high util% but idle-level power and no process — a known nvidia-smi quirk on GB10,
-     not real load. Trust power/process instead.
-
-USER            PID   GPU-MEM   SM%   CPU%     RSS     TIME T COMMAND
-  (no process is holding a CUDA context)</code></pre>
-        <p>Here the raw percentage says "96%", but the power draw is only 17W (idle-level, real jobs pull 60-100+W)
-        and no process is listed &mdash; <code>sparktop</code> flags this as a stale reading rather than pretending
-        the GPU is busy. This can happen after a job finishes; it clears on its own eventually. If you ever see this,
-        the GPU is actually free to use &mdash; trust the process table and power draw, not the raw percentage.</p>
       </li>
       <li>
         <strong>Check your architecture</strong> (this machine is ARM64, not the usual x86_64 &mdash; matters for
@@ -180,10 +165,12 @@ conda activate myenv</code></pre>
       Don't use it as an excuse to hold the GPU indefinitely.</li>
       <li><strong>Coordinate with the other students</strong> if you know you need a long block of GPU time (e.g.
       a multi-hour training run). A quick message to the group avoids collisions.</li>
-      <li><strong>Clean up when you're done</strong> &mdash; kill your own leftover processes (<code>kill &lt;PID&gt;</code>
-      using the PID shown in <code>sparktop</code>) instead of leaving them for someone else to find.</li>
-      <li><strong>Never run commands as another user or try to kill someone else's process</strong> unless asked
-      to by the instructor.</li>
+      <li><strong>Clean up when you're done</strong> &mdash; exit your script normally, shut down the Jupyter kernel
+      from the notebook interface, and close your <code>tmux</code>/<code>screen</code> session once the job
+      finishes, instead of just disconnecting and leaving it running.</li>
+      <li><strong>If a process looks stuck and won't exit normally, don't try to force it yourself</strong> &mdash;
+      email <a href="#help">Junyi Ye</a> instead of using <code>kill</code>. Forcibly killing a process that's
+      mid-way through using the GPU can occasionally leave the GPU in a confused state for everyone.</li>
     </ul>
 
     <p>There's currently no automated queueing system (like Slurm) on this machine &mdash; sharing works on
