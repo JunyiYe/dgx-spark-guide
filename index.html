@@ -169,9 +169,7 @@ conda activate myenv</code></pre>
 
     <ul>
       <li><strong>Always run <code>sparktop</code> before starting a job.</strong> If GPU memory or utilization
-      is already high, someone else is using it &mdash; wait or coordinate with them before launching your own job.
-      (Don't rely on plain <code>nvidia-smi</code> here &mdash; on this unified-memory GPU it can't report memory
-      usage correctly.)</li>
+      is already high, someone else is using it &mdash; wait or coordinate with them before launching your own job.</li>
       <li><strong>Don't leave idle notebooks or sessions holding GPU memory.</strong> A Jupyter kernel or Python
       shell that's just sitting there importing torch can still reserve GPU memory nobody else can use. Shut down
       what you're not actively using.</li>
