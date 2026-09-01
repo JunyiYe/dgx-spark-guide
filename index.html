@@ -94,9 +94,13 @@
       </li>
       <li>
         <strong>Check the GPU is healthy and see who else might be using it:</strong>
-        <pre><code>nvidia-smi</code></pre>
-        This shows GPU utilization, memory usage, and any running processes. Get in the habit of checking this
-        before you start anything heavy.
+        <pre><code>sparktop</code></pre>
+        This machine has a single GPU with <strong>unified memory</strong> shared between CPU and GPU, so the
+        usual <code>nvidia-smi</code> command can't report memory usage correctly here (it will show
+        "Not Supported"). <code>sparktop</code> is a tool written for this box specifically &mdash; it shows GPU
+        utilization, unified memory usage, and exactly who is running what. You'll actually see a short version
+        of this automatically every time you SSH in. Use <code>sparktop -w</code> to watch it live (refreshes
+        every 2 seconds, Ctrl-C to quit).
       </li>
       <li>
         <strong>Check your architecture</strong> (this machine is ARM64, not the usual x86_64 &mdash; matters for
@@ -143,8 +147,10 @@ conda activate myenv</code></pre>
     <p class="section-sub">There is one GPU for everyone. These rules exist to keep it usable for all of you.</p>
 
     <ul>
-      <li><strong>Always run <code>nvidia-smi</code> before starting a job.</strong> If GPU memory or utilization
-      is already high, someone else is using it &mdash; wait or coordinate with them before launching your own job.</li>
+      <li><strong>Always run <code>sparktop</code> before starting a job.</strong> If GPU memory or utilization
+      is already high, someone else is using it &mdash; wait or coordinate with them before launching your own job.
+      (Don't rely on plain <code>nvidia-smi</code> here &mdash; on this unified-memory GPU it can't report memory
+      usage correctly.)</li>
       <li><strong>Don't leave idle notebooks or sessions holding GPU memory.</strong> A Jupyter kernel or Python
       shell that's just sitting there importing torch can still reserve GPU memory nobody else can use. Shut down
       what you're not actively using.</li>
@@ -154,7 +160,7 @@ conda activate myenv</code></pre>
       <li><strong>Coordinate with the other students</strong> if you know you need a long block of GPU time (e.g.
       a multi-hour training run). A quick message to the group avoids collisions.</li>
       <li><strong>Clean up when you're done</strong> &mdash; kill your own leftover processes (<code>kill &lt;PID&gt;</code>
-      using the PID shown in <code>nvidia-smi</code>) instead of leaving them for someone else to find.</li>
+      using the PID shown in <code>sparktop</code>) instead of leaving them for someone else to find.</li>
       <li><strong>Never run commands as another user or try to kill someone else's process</strong> unless asked
       to by the instructor.</li>
     </ul>
@@ -174,7 +180,7 @@ conda activate myenv</code></pre>
       </tr>
       <tr>
         <td>CUDA out of memory</td>
-        <td>Run <code>nvidia-smi</code> &mdash; someone else is likely using GPU memory. Wait, or ask in the group chat.</td>
+        <td>Run <code>sparktop</code> &mdash; someone else is likely using GPU memory. Wait, or ask in the group chat.</td>
       </tr>
       <tr>
         <td>Miniconda installer fails or runs strangely slow</td>
