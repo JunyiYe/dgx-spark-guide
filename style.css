@@ -9,7 +9,7 @@
   --code-bg: #1a2129;
   --warn-bg: #2b2210;
   --warn-border: #6b5416;
-  --max-width: 920px;
+  --max-width: 1040px;
 }
 
 * { box-sizing: border-box; }
@@ -82,28 +82,10 @@ nav.toc .toc-inner {
   margin: 0 auto;
   padding: 0.7rem 1.5rem;
   display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.4rem;
   gap: 1.3rem;
-  overflow-x: auto;
   font-size: 0.85rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-
-nav.toc .toc-inner::-webkit-scrollbar {
-  height: 6px;
-}
-
-nav.toc .toc-inner::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-nav.toc .toc-inner::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 999px;
-}
-
-nav.toc .toc-inner::-webkit-scrollbar-thumb:hover {
-  background: var(--text-dim);
 }
 
 nav.toc a {
