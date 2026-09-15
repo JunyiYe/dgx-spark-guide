@@ -56,9 +56,8 @@ pip install jupyterlab</code></pre>
     token:</p>
     <pre><code>Jupyter Server 2.21.1 is running at:
 http://127.0.0.1:8899/lab?token=483b8f0c565ee4db71bdbec072d8662dc4dc0da601483f42</code></pre>
-    <p>Leave this running in <code>tmux</code> or <code>screen</code> (see the main guide's
-    <a href="index.html#sharing">GPU sharing section</a>) so it survives you disconnecting. If you just close the
-    terminal without using tmux/screen, JupyterLab shuts down with it.</p>
+    <p><strong>Leave this terminal window open</strong> for as long as you want to use JupyterLab &mdash; closing
+    it (or disconnecting) stops the server. If that happens, just run the command again to start a new one.</p>
   </section>
 
   <section id="tunnel">
@@ -95,11 +94,12 @@ http://127.0.0.1:8899/lab?token=483b8f0c565ee4db71bdbec072d8662dc4dc0da601483f42
 
   <section id="next-time">
     <h2><span class="num">05</span> Reconnecting Later</h2>
-    <p class="section-sub">If JupyterLab is still running from a previous session (e.g. in tmux), you don't need
-    to launch it again.</p>
+    <p class="section-sub">If the terminal running JupyterLab is still open and you just lost the browser tab
+    or forgot the URL, you don't need to launch it again.</p>
     <pre><code>jupyter lab list</code></pre>
-    <p>This prints the URL (with port and token) of any JupyterLab server already running under your account.
-    Re-open the SSH tunnel from step 3 using that port, then open that URL in your browser.</p>
+    <p>Run this from a <strong>new</strong> terminal window (a fresh SSH connection is fine). It prints the URL
+    (with port and token) of any JupyterLab server still running under your account. Re-open the SSH tunnel from
+    step 3 using that port, then open that URL in your browser.</p>
   </section>
 
   <section id="troubleshooting">
@@ -121,8 +121,8 @@ http://127.0.0.1:8899/lab?token=483b8f0c565ee4db71bdbec072d8662dc4dc0da601483f42
       </tr>
       <tr>
         <td>JupyterLab stopped when I closed my terminal</td>
-        <td>Run it inside <code>tmux</code> or <code>screen</code> next time so it keeps running after you
-        disconnect.</td>
+        <td>That's expected &mdash; the terminal running <code>jupyter lab</code> needs to stay open the whole
+        time. Just run the command again to start a new one.</td>
       </tr>
     </table>
   </section>
